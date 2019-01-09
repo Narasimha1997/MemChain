@@ -1,0 +1,11 @@
+{
+  "name": "mem-cache",
+  "version": "1.0.0",
+  "description": "A simple hierarchial-indexed object storage with Blockchain based hash verification",
+  "main": "index.js",
+  "author" : "Narasimha Prasanna HN",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC"
+}
