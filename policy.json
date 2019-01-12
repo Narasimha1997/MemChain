@@ -1,7 +1,7 @@
 {
     "passKeyPath" : "/home/narasimha/passkey.txt",
     "encryptionAlgorithm" : "aes256",
-    "backupWindow" : 1000,
+    "backupWindow" : 10000,
     "backupPath" : "/home/narasimha/store",
     "enableValidation" : false
 }

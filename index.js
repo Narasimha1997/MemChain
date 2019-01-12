@@ -32,19 +32,35 @@ app.post('/api/create', (req, resp) => {
     schemaTable.addSchema(name, schema)
     chainTable.createChain(name)
     resp.send(JSON.stringify({success : true}))
+})
 
+app.post('/api/list-names', (req, resp) => {
+    return resp.send(JSON.stringify(schemaTable.obtainSchemaNames()))
+})
+
+app.post('/api/obtain-schema', (req, resp) => {
+    var name = req.body.name
+    return resp.send(JSON.stringify(schemaTable.obtainSchemaStructure(name)))
 })
 
 app.post('/api/retrive', (req, resp) => {
     var name = req.body.name
     var accessKey = req.body.accessKey
 
+    //console.log(name, accessKey)
+
     if(!chainTable.checkAccessKey(name, accessKey)) {
         resp.send(JSON.stringify({success : false, output : 'Invalid access key'}))
         return
     }
 
-    var result = chainTable.retrive(name, accessKey, false)
+    var result = null;
+
+    if(req.body.validate) {
+        result = chainTable.retrive(name, accessKey, true)
+    }
+
+    result = chainTable.retrive(name, accessKey, false)
 
     if(result == null) {
         resp.send(JSON.stringify({success : false, output : 'Object not found'}))
@@ -54,6 +70,9 @@ app.post('/api/retrive', (req, resp) => {
 app.post('/api/insert', (req, resp) => {
     var name = req.body.name
     var data = req.body.object
+
+    console.log(name, data)
+
     var schema = schemaTable.obtainSchema(name)
     if(schema == null) {
         resp.send(JSON.stringify({
@@ -66,6 +85,15 @@ app.post('/api/insert', (req, resp) => {
     }else resp.send(JSON.stringify({accessKey : accessKey, time : new Date().toString()}))
 })
 
+app.post('/api/obtain-keys', (req, resp) => {
+    var name = req.body.name
+    var keys = chainTable.getAccessKeys(name)
+    return resp.send(JSON.stringify({
+        keys : keys,
+        count : keys.length
+    }))
+})
+
 app.listen(8000, 'localhost', () => {
-    console.log("Server running... ... ..")
+    console.log("Server running... ... ..") 
 })

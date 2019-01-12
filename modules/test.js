@@ -54,29 +54,27 @@ function write(name, object) {
 
     backupManager(loadPolicy('../policy.json'), schemaManager, chainTable)
     //var objects = restoreManager(loadPolicy('../policy.json'))
-    var k2 = objects.chainTable.addToChain("students", {
-        name : "LOAD",
-        usn : "1KS",
-        "age" : 50,
-    }, studentSchema)
-    console.log(objects.chainTable.retrive('students', k2))
 
     return [k1, k2, k3]
 
     
 }
 
+keys = write()
+
 function read(keys) {
     for(var i = 0; i < keys.length; i++) {
         console.log(keys[i])
-        var obj = chainTable.retrive("students", keys[i])
+        var obj = chainTable.retrive("students", keys[i], true)
         console.log(obj)
     }
 }
 
+read(keys)
+
 //var keys = write("xxxx", 'xxxxx')
 
-var objects = restoreManager(loadPolicy('../policy.json'))
+/*var objects = restoreManager(loadPolicy('../policy.json'))
 
 console.log(objects.chainTable.retrive("students", "e8f1d6968899b76780844440d1cf1866"))
 
@@ -86,6 +84,6 @@ var k2 = objects.chainTable.addToChain("students", {
     usn : "1KS",
     "age" : 50,
 }, schemaManager.obtainSchema("students"))
-console.log(objects.chainTable.retrive('students', k2))
+console.log(objects.chainTable.retrive('students', k2))*/
 
 //read(keys)

@@ -27,6 +27,14 @@ class SchemaManager {
         return this.schemaTable[name]
     }
 
+    obtainSchemaNames() {
+        return Object.keys(this.schemaTable)
+    }
+
+    obtainSchemaStructure(name) {
+        return this.schemaTable[name]
+    }
+
     dump(fp) {
         fs.write(fp, JSON.stringify(this.schemaTable), (err) => {
             console.log(err)

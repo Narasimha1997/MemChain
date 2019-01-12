@@ -11,6 +11,7 @@ function write(fp, data) {
 }
 
 function createObject(object, schemaTable, name) {
+    console.log(object)
     var obj = new ObjectManager(
         object.userobject,
         schemaTable.obtainSchema(name),
@@ -38,7 +39,7 @@ function loadChainTable (chainTableJSON, schemaTable) {
     for(var i = 0 ; i < topLevelNames.length; i++) {
         var accessKeys = Object.keys(chainTableJSON[topLevelNames[i]])
         chainTable.createChain(topLevelNames[i])
-
+        chainTable.chainTable[topLevelNames[i]].accessKeys = accessKeys;
         for(var j = 0; j < accessKeys.length; j++) {
             var key = accessKeys[j]
             chainTable.chainTable[topLevelNames[i]].chain[key] = createObject(

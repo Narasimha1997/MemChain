@@ -13,27 +13,64 @@ class Chain {
 
     constructor() {
         this.chain = {}
+        this.accessKeys = []
+    }
+
+    obtainPreviousHash() {
+        //traverse the chain, and obtain the next hash until the last:
+        var keys = Object.keys(this.chain)
+        
     }
 
     add(object, schema) {
-        var obj = prepareObject(object, schema, "", (e) => console.log(e))
+        var previousHash = (this.accessKeys.length > 0)? this.accessKeys[this.accessKeys.length - 1]: "0xfff3d";
+        console.log(previousHash)
+        var obj = prepareObject(object, schema, previousHash, (e) => console.log(e))
         obj.seqNumber = Object.keys(this.chain).length + 1;
         this.chain[obj.accessKey] = obj.object
         //console.log(this.chain)
+        this.accessKeys.push(obj.accessKey)
         return obj.accessKey
+    }
 
+    computeHash(object) {
+        return crypto.createHash("md5").update(JSON.stringify(object), "utf-8").digest("hex")
     }
 
     retrive(key, withValidation = false) {
+        //console.log(this.accessKeys)
         if(!withValidation) {
             //O(1) 
             return this.chain[key].userobject
         }else {
+
+            if(this.accessKeys.length == 1) {
+                return (this.computeHash(this.chain[this.accessKeys[0]]) == key) ? 
+                this.chain[key].userobject 
+                : {error : "Tamper detected", tamperedObject : prepareObject, nextObject : containerObject};
+            }
+
+
             //TODO : Implement after validate() method
+            for(var i = 1; i < this.accessKeys.length; i++) {
+                var previousObject = this.chain[this.accessKeys[i - 1]]
+                previousObject.hash = ""
+                var previousHash = this.computeHash(previousObject)
+                var containerObject = this.chain[this.accessKeys[i]]
+
+                //console.log(previousHash, containerObject.previousHash)
+
+                if(containerObject.previousHash !== previousHash) {
+                    return {error : "Tamper detected", tamperedObject : previousObject, nextObject : containerObject}
+                }
+            }
+
+            return this.chain[key].userobject
         }
     }
-    validate() {
 
+    validate() {
+        //write your own validation if necessary and call it in the code 
     }
 
 }
@@ -53,6 +90,10 @@ class ChainTable {
     */
    loadFromFile(loadFromFile) {
        return JSON.parse(fs.readFileSync(loadFromFile, {encoding : 'utf-8'}))
+   }
+
+   getAccessKeys(name) {
+       return Object.keys(this.chainTable[name].chain)
    }
 
    checkAccessKey(name, key) {

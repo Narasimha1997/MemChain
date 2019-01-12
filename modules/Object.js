@@ -15,13 +15,16 @@ class ObjectManager {
     confirmSchemaAndCreate(object, objectSchema, event) {
         var keys = Object.keys(object)
         var newObject = {}
-        for(var i = 0; i < keys.length; i++) 
-            if ( (typeof(objectSchema[keys[i]]) != 'undefined') && (typeof(object[keys[i]]) == objectSchema[keys[i]]) )
+        console.log(keys, object, objectSchema)
+        for(var i = 0; i < keys.length; i++) {
+            //console.log((typeof(objectSchema[keys[i]]) != 'undefined') && (typeof(object[keys[i]]) == objectSchema[keys[i]]))
+            if ((typeof(objectSchema[keys[i]]) != 'undefined') && (typeof(object[keys[i]]) == objectSchema[keys[i]]))
               newObject[keys[i]] = object[keys[i]]
             else {
                 event("Error : Schema Validation Failed")
                 return
             }
+        }
         return newObject
     }
 
