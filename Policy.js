@@ -21,10 +21,17 @@ function loadPolicy(fname) {
 function initializeDatabase(policyContainer) {
 
     //check if the backup exists with non-zero size:
+    if(!fs.existsSync(policyContainer.backupPath+'/schema.db') || !fs.existsSync(policyContainer.backupPath+'/chain.db')) {
+        return {
+            schemaTable : new SchemaManager(),
+            chainTable : new ChainManager()
+        }
+    }
 
      var schema_file = fs.readFileSync(policyContainer.backupPath+'/schema.db', {encoding : 'utf-8'}).toString()
 
      console.log(schema_file)
+
 
      if(schema_file.length < 0 || schema_file.length == 0) {
          return {

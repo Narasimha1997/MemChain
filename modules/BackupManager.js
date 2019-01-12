@@ -94,6 +94,7 @@ function backup (policyObject, schemaTable, chainTable) {
 }
 
 function restore(policyObject) {
+    
     var passKey = fs.readFileSync(policyObject.passKeyPath, {encoding : 'utf-8'}).toString()
 
     var schema = fs.readFileSync(policyObject.backupPath+'/schema.db', {encoding : 'utf-8'}).toString()
